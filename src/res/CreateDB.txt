@@ -1,0 +1,216 @@
+CREATE DATABASE "GaraFeroviara"
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Romanian_Moldova.1252'
+    LC_CTYPE = 'Romanian_Moldova.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+
+
+
+CREATE TABLE IF NOT EXISTS public.locatii
+(
+    idlocatie integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    numelocatie character varying(50) COLLATE pg_catalog."default",
+    persid integer NOT NULL,
+    CONSTRAINT "Locatii_pkey" PRIMARY KEY (idlocatie),
+    CONSTRAINT "Locatii_PersID_key" UNIQUE (persid)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.locatii
+    OWNER to postgres;
+
+
+
+
+-- Table: public.rute
+
+-- DROP TABLE IF EXISTS public.rute;
+
+CREATE TABLE IF NOT EXISTS public.rute
+(
+    codcursa integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    dataplecarii character varying(12) COLLATE pg_catalog."default",
+    oraplecarii character varying(8) COLLATE pg_catalog."default",
+    locatieinitiala integer,
+    datasosirii character varying(12) COLLATE pg_catalog."default",
+    orasosirii character varying(8) COLLATE pg_catalog."default",
+    destinatie integer,
+    durata bigint,
+    nrsaptamanii integer,
+    locuridisponibileconfort integer,
+    locuriconfort integer,
+    pretconfort real,
+    locuridisponibileeco integer,
+    locurieco integer,
+    preteco real,
+    idziua integer,
+    persid integer NOT NULL,
+    CONSTRAINT "Rute_pkey" PRIMARY KEY (codcursa),
+    CONSTRAINT "Rute_PersID_key" UNIQUE (persid),
+    CONSTRAINT "Rute_Destinatie_fkey" FOREIGN KEY (destinatie)
+        REFERENCES public.locatii (idlocatie) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT "Rute_IDZiua_fkey" FOREIGN KEY (idziua)
+        REFERENCES public.zile (idziua) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT "Rute_LocatieInitiala_fkey" FOREIGN KEY (locatieinitiala)
+        REFERENCES public.locatii (idlocatie) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.rute
+    OWNER to postgres;
+
+
+
+-- Table: public.ruteanulate
+
+-- DROP TABLE IF EXISTS public.ruteanulate;
+
+CREATE TABLE IF NOT EXISTS public.ruteanulate
+(
+    codcursa integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    dataplecarii character varying(12) COLLATE pg_catalog."default",
+    oraplecarii character varying(8) COLLATE pg_catalog."default",
+    locatieinitiala integer,
+    datasosirii character varying(12) COLLATE pg_catalog."default",
+    orasosirii character varying(8) COLLATE pg_catalog."default",
+    destinatie integer,
+    durata bigint,
+    nrsaptamanii integer,
+    locuridisponibileconfort integer,
+    locuriconfort integer,
+    pretconfort real,
+    locuridisponibileeco integer,
+    locurieco integer,
+    preteco real,
+    idziua integer,
+    persid integer NOT NULL,
+    CONSTRAINT "RuteAnulate_pkey" PRIMARY KEY (codcursa),
+    CONSTRAINT "RuteAnulate_PersID_key" UNIQUE (persid),
+    CONSTRAINT "RuteAnulate_Destinatie_fkey" FOREIGN KEY (destinatie)
+        REFERENCES public.locatii (idlocatie) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "RuteAnulate_IDZiua_fkey" FOREIGN KEY (idziua)
+        REFERENCES public.zile (idziua) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "RuteAnulate_LocatieInitiala_fkey" FOREIGN KEY (locatieinitiala)
+        REFERENCES public.locatii (idlocatie) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.ruteanulate
+    OWNER to postgres;
+
+
+
+-- Table: public.rutetemp
+
+-- DROP TABLE IF EXISTS public.rutetemp;
+
+CREATE TABLE IF NOT EXISTS public.rutetemp
+(
+    codcursa integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    dataplecarii character varying(12) COLLATE pg_catalog."default",
+    oraplecarii character varying(8) COLLATE pg_catalog."default",
+    locatieinitiala integer,
+    datasosirii character varying(12) COLLATE pg_catalog."default",
+    orasosirii character varying(8) COLLATE pg_catalog."default",
+    destinatie integer,
+    durata bigint,
+    nrsaptamanii integer,
+    locuridisponibileconfort integer,
+    locuriconfort integer,
+    pretconfort real,
+    locuridisponibileeco integer,
+    locurieco integer,
+    preteco real,
+    idziua integer,
+    persid integer NOT NULL,
+    CONSTRAINT "RuteTemp_pkey" PRIMARY KEY (codcursa),
+    CONSTRAINT "RuteTemp_PersID_key" UNIQUE (persid),
+    CONSTRAINT "RuteTemp_Destinatie_fkey" FOREIGN KEY (destinatie)
+        REFERENCES public.locatii (idlocatie) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "RuteTemp_IDZiua_fkey" FOREIGN KEY (idziua)
+        REFERENCES public.zile (idziua) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "RuteTemp_LocatieInitiala_fkey" FOREIGN KEY (locatieinitiala)
+        REFERENCES public.locatii (idlocatie) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.rutetemp
+    OWNER to postgres;
+
+
+-- Table: public.zile
+
+-- DROP TABLE IF EXISTS public.zile;
+
+CREATE TABLE IF NOT EXISTS public.zile
+(
+    idziua integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    numezi character varying(20) COLLATE pg_catalog."default",
+    persid integer NOT NULL,
+    CONSTRAINT "Zile_pkey" PRIMARY KEY (idziua),
+    CONSTRAINT "Zile_PersID_key" UNIQUE (persid)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.zile
+    OWNER to postgres;
+
+
+
+
+
+
+INSERT INTO INSERT INTO public.locatii(
+            	numelocatie, persid)
+            	VALUES
+            	(Chisinau, 1),
+            	(Balti, 2),
+            	(Tiraspol, 3);
+
+
+
+
+INSERT INTO public.zile(
+    numezi, persid)
+	VALUES
+	(Luni, 1),
+	(Marti, 2),
+	(Miercuri, 3),
+	(Joi, 4),
+	(Vineri, 5),
+	(Sambata, 6),
+	(Duminica, 7);
